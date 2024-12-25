@@ -2,22 +2,8 @@ const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const nodemailer = require('nodemailer'); // Import nodemailer
 const axios = require('axios'); // Ensure axios is imported for making HTTP requests
-const express = require('express'); // Import express to bind to a port
 
 const userState = {}; // Store user states
-
-// Set up Express app to handle HTTP requests and bind to the port
-const app = express();
-const port = process.env.PORT || 3000; // Use Heroku's port or fallback to 3000 for local development
-
-app.get('/', (req, res) => {
-    res.send('WhatsApp Web Bot is running!');
-});
-
-// Start the server on the port
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
 
 const client = new Client({
     authStrategy: new LocalAuth(),
@@ -233,10 +219,10 @@ function mapDeal(category, option) {
         ],
     };
 
-    return deals[category].find(deal => deal.id === option);
+    return deals[category]?.find((deal) => deal.id === option);
 }
 
-// Function to format phone number
+// Format phone number
 function formatPhoneNumber(number) {
     if (number.startsWith('254')) return `+${number}`;
     if (number.startsWith('0')) return `+254${number.slice(1)}`;
@@ -273,4 +259,3 @@ async function initiateStkPush(amount, phoneNumber) {
         throw new Error('Error with STK Push: ' + error.message);
     }
 }
-
