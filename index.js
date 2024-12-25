@@ -258,4 +258,3 @@ async function initiateStkPush(amount, phoneNumber) {
     } catch (error) {
         throw new Error('Error with STK Push: ' + error.message);
     }
-}
