@@ -1,5 +1,6 @@
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
+const nodemailer = require('nodemailer'); // Import nodemailer
 const axios = require('axios'); // Ensure axios is imported for making HTTP requests
 
 const userState = {}; // Store user states
@@ -14,11 +15,42 @@ const client = new Client({
     },
 });
 
-// QR Code Generation
+// Email Configuration
+const transporter = nodemailer.createTransport({
+    service: 'gmail', // Use your email provider (Gmail, etc.)
+    auth: {
+        user: 'emmkash20@gmail.com',  // Replace with your email
+        pass: 'mjwq oiug wfxv vexl',   // Replace with your email password or app-specific password
+    },
+});
+
+// QR Code Generation and Email Sending
 client.on('qr', (qr) => {
     qrcode.generate(qr, { small: true });
     console.log('QR Code received, scan with your WhatsApp!');
+
+    // Send the QR code to the specified email address
+    sendQRCodeViaEmail(qr);
 });
+
+// Send QR Code via Email
+function sendQRCodeViaEmail(qrCode) {
+    const mailOptions = {
+        from: 'emmkash20@gmail.com',  // Your email address
+        to: 'dukekirera84@gmail.com',  // Replace with the recipient's email
+        subject: 'WhatsApp Web QR Code for Authentication',
+        text: 'Please scan the QR code below to authenticate the bot:',
+        html: `<p>Please scan the QR code below to authenticate the bot:</p><pre>${qrCode}</pre>`,  // Send QR code in email body
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log('Error sending email: ', error);
+        } else {
+            console.log('QR Code sent to email: ' + info.response);
+        }
+    });
+}
 
 // Client Ready
 client.on('ready', () => {
