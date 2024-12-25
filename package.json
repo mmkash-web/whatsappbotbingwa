@@ -10,7 +10,8 @@
     "whatsapp-web.js": "^1.21.0",
     "qrcode-terminal": "^0.12.0",
     "axios": "^1.5.0",
-    "nodemailer": "^6.7.0"
+    "nodemailer": "^6.7.0",
+    "puppeteer-core": "^19.0.0"
   },
   "engines": {
     "node": ">=16.x"
@@ -18,5 +19,3 @@
   "author": "Emmkash-Tech",
   "license": "ISC"
 }
-
-
