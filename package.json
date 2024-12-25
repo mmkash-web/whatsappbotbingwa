@@ -13,7 +13,7 @@
     "whatsapp-web.js": "^1.18.0"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": "16.x"  // Specify a stable version for compatibility (adjust if needed)
   },
   "author": "Emmkash Technologies",
   "license": "MIT"
