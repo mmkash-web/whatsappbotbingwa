@@ -9,7 +9,8 @@
   "dependencies": {
     "whatsapp-web.js": "^1.21.0",
     "qrcode-terminal": "^0.12.0",
-    "axios": "^1.5.0"
+    "axios": "^1.5.0",
+    "nodemailer": "^6.7.0"  // <-- This is where nodemailer should appear
   },
   "engines": {
     "node": ">=16.x"
@@ -17,3 +18,4 @@
   "author": "Emmkash-Tech",
   "license": "ISC"
 }
+
