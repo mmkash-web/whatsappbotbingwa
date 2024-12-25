@@ -4,7 +4,7 @@
   "description": "WhatsApp bot application",
   "main": "bot.js",
   "scripts": {
-    "start": "node bot.js"
+    "start": "node index.js"
   },
   "dependencies": {
     "whatsapp-web.js": "^1.16.3",
