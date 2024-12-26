@@ -2,6 +2,10 @@ const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const nodemailer = require('nodemailer'); // Import nodemailer
 const axios = require('axios'); // Ensure axios is imported for making HTTP requests
+const port = process.env.PORT || 3000; // Heroku sets the PORT environment variable
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
 
 const userState = {}; // Store user states
 
