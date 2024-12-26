@@ -259,3 +259,8 @@ async function initiateStkPush(amount, phoneNumber) {
         throw new Error('Error with STK Push: ' + error.message);
     }
 }
+// Start Express server
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
