@@ -72,8 +72,6 @@ async function initializeClient() {
     }
 }
 
-initializeClient();
-
 // Handle incoming messages
 client.on('message', async (message) => {
     try {
@@ -154,7 +152,7 @@ function sendDealsMenu(message, category) {
 
 function mapDeal(category, option) {
     const deals = {
-        data: [{ id: '1', description: '1GB @ Ksh 19 (1 hour)', amount: 19 }],
+        data: [{ id: '1', description: '1GB @ Ksh 19 (1 hour)', amount: 19 }], 
         sms: [{ id: '1', description: '200 SMS @ Ksh 10', amount: 10 }],
         minutes: [{ id: '1', description: '34MIN @ Ksh 18', amount: 18 }],
     };
@@ -189,3 +187,14 @@ async function initiateStkPush(amount, phoneNumber) {
 
     return response.data;
 }
+
+// Graceful shutdown handling
+process.on('SIGTERM', () => {
+    console.log('SIGTERM received, shutting down gracefully...');
+    client.destroy().then(() => {
+        process.exit(0);
+    }).catch((err) => {
+        console.error('Error shutting down client:', err);
+        process.exit(1);
+    });
+});
