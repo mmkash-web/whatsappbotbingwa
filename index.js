@@ -253,7 +253,7 @@ async function initiateStkPush(amount, phoneNumber) {
             headers: {
                 'Content-Type': 'application/json'
             }
-        });
+    
         return response.data;
     } catch (error) {
         throw new Error('Error with STK Push: ' + error.message);
