@@ -2,6 +2,7 @@ const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const nodemailer = require('nodemailer'); // Import nodemailer
 const axios = require('axios'); // Ensure axios is imported for making HTTP requests
+const express = require('express'); // Ensure express is imported
 
 const userState = {}; // Store user states
 
@@ -228,9 +229,6 @@ function formatPhoneNumber(number) {
     if (number.startsWith('0')) return `+254${number.slice(1)}`;
     return number;
 }
-const express = require('express');
-const axios = require('axios');
-const app = express();
 
 // Function to initiate STK Push via PayHero API
 async function initiateStkPush(amount, phoneNumber) {
@@ -259,13 +257,6 @@ async function initiateStkPush(amount, phoneNumber) {
         });
         return response.data;
     } catch (error) {
-        throw new Error('Error with STK Push: ' + error.message);
+        throw new Error('Failed to initiate STK Push');
     }
 }
-
-// Start Express server
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
-
