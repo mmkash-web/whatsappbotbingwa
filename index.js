@@ -228,6 +228,9 @@ function formatPhoneNumber(number) {
     if (number.startsWith('0')) return `+254${number.slice(1)}`;
     return number;
 }
+const express = require('express');
+const axios = require('axios');
+const app = express();
 
 // Function to initiate STK Push via PayHero API
 async function initiateStkPush(amount, phoneNumber) {
@@ -253,14 +256,16 @@ async function initiateStkPush(amount, phoneNumber) {
             headers: {
                 'Content-Type': 'application/json'
             }
-    
+        });
         return response.data;
     } catch (error) {
         throw new Error('Error with STK Push: ' + error.message);
     }
 }
+
 // Start Express server
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+
