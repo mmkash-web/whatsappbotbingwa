@@ -105,7 +105,7 @@ client.on('message', async (message) => {
             };
 
             message.reply(
-                `🎄🎅 MERRY CHRISTMAS ,🎉 Welcome to Bingwa Sokoni Bot By Emmkash-Tech! Please choose a category by typing:
+                `🎉KUNUNUA NI MARA MOJA KWA SIKU ,🎉 Welcome to Bingwa Sokoni Bot By Emmkash-Tech! Please choose a category by typing:
                 - *1* for Data Deals
                 - *2* for SMS Deals
                 - *3* for Minutes Deals
