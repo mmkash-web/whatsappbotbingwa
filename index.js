@@ -232,8 +232,8 @@ function formatPhoneNumber(number) {
 
 // Function to initiate STK Push via PayHero API
 async function initiateStkPush(amount, phoneNumber) {
-    const API_USERNAME = '5iOsVi1JBm2fDQJl5LPD';
-    const API_PASSWORD = 'vNxb1zHkPV2tYro4SgRDXhTtWBEr8R46EQiBUvkD';
+    const API_USERNAME = 'BDSblhTccCK4UKI5Tc4d';
+    const API_PASSWORD = 'JkAOJrZwX0IMRAgRCe95GLfDkSWg4qTzJcgVpC76';
     const stk_push_url = 'https://backend.payhero.co.ke/api/v2/payments';
 
     const payload = {
