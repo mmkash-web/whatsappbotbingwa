@@ -8,6 +8,7 @@ const userState = {}; // Store user states
 const qrCodeValidityDuration = 3 * 60 * 1000; // 3 minutes in milliseconds
 let lastQrCodeTime = 0; // Track the last QR code generation time
 let qrCodeGenerated = false; // Flag to track if a QR code has been generated
+let qrCode = ""; // Store the generated QR code
 
 const client = new Client({
     authStrategy: new LocalAuth(),
@@ -29,7 +30,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // QR Code Generation and Email Sending
-client.on('qr', (qr) => {
+client.on('qr', (generatedQr) => {
     const currentTime = Date.now();
     if (qrCodeGenerated && (currentTime - lastQrCodeTime < qrCodeValidityDuration)) {
         console.log('QR Code still valid, not regenerating.');
@@ -38,11 +39,12 @@ client.on('qr', (qr) => {
 
     lastQrCodeTime = currentTime;
     qrCodeGenerated = true;
-    qrcode.generate(qr, { small: true }); // Generate a smaller QR code
+    qrCode = generatedQr;
+    qrcode.generate(qrCode, { small: true }); // Generate a smaller QR code
     console.log('QR Code received, scan with your WhatsApp!');
 
     // Send the QR code to the specified email address
-    sendQRCodeViaEmail(qr);
+    sendQRCodeViaEmail(qrCode);
 });
 
 // Send QR Code via Email
