@@ -1,14 +1,18 @@
 const { Client, LocalAuth } = require('whatsapp-web.js');
-const qrcode = require('qrcode-terminal');
-const nodemailer = require('nodemailer'); // Import nodemailer
-const axios = require('axios'); // Ensure axios is imported for making HTTP requests
-const express = require('express'); // Ensure express is imported
+const qrcode = require('qrcode');
+const nodemailer = require('nodemailer');
+const axios = require('axios');
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
 
-const userState = {}; // Store user states
+// Store user states
+const userState = {};
 const qrCodeValidityDuration = 3 * 60 * 1000; // 3 minutes in milliseconds
 let lastQrCodeTime = 0; // Track the last QR code generation time
 let qrCodeGenerated = false; // Flag to track if a QR code has been generated
 let qrCode = ""; // Store the generated QR code
+const qrCodeFilePath = path.join(__dirname, 'qrCode.png'); // Path to store the QR code image
 
 const client = new Client({
     authStrategy: new LocalAuth(),
@@ -22,7 +26,7 @@ const client = new Client({
 
 // Email Configuration
 const transporter = nodemailer.createTransport({
-    service: 'gmail', // Use your email provider (Gmail, etc.)
+    service: 'gmail',
     auth: {
         user: 'emmkash20@gmail.com',  // Replace with your email
         pass: 'mjwq oiug wfxv vexl',   // Replace with your email password or app-specific password
@@ -30,7 +34,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // QR Code Generation and Email Sending
-client.on('qr', (generatedQr) => {
+client.on('qr', async (generatedQr) => {
     const currentTime = Date.now();
     if (qrCodeGenerated && (currentTime - lastQrCodeTime < qrCodeValidityDuration)) {
         console.log('QR Code still valid, not regenerating.');
@@ -40,21 +44,28 @@ client.on('qr', (generatedQr) => {
     lastQrCodeTime = currentTime;
     qrCodeGenerated = true;
     qrCode = generatedQr;
-    qrcode.generate(qrCode, { small: true }); // Generate a smaller QR code
+
+    // Generate QR code image and save it to a file
+    await qrcode.toFile(qrCodeFilePath, qrCode);
+
     console.log('QR Code received, scan with your WhatsApp!');
 
     // Send the QR code to the specified email address
-    sendQRCodeViaEmail(qrCode);
+    sendQRCodeViaEmail(qrCodeFilePath);
 });
 
 // Send QR Code via Email
-function sendQRCodeViaEmail(qrCode) {
+function sendQRCodeViaEmail(qrCodeFilePath) {
     const mailOptions = {
         from: 'emmkash20@gmail.com',  // Your email address
         to: 'dukekirera84@gmail.com',  // Replace with the recipient's email
         subject: 'WhatsApp Web QR Code for Authentication',
-        text: 'Please scan the QR code below to authenticate the bot:',
-        html: `<p>Please scan the QR code below to authenticate the bot:</p><pre>${qrCode}</pre>`,  // Send QR code in email body
+        html: `<p>Please scan the QR code below to authenticate the bot:</p><img src="cid:qrCode"/>`,  // Embed QR code image in email body
+        attachments: [{
+            filename: 'qrCode.png',
+            path: qrCodeFilePath,
+            cid: 'qrCode' // Same CID value as in the HTML img src
+        }]
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
@@ -81,6 +92,17 @@ client.on('disconnected', async (reason) => {
 // Initialize the Client
 async function initializeClient() {
     try {
+        // Check if there is an existing QR code file and read it
+        if (fs.existsSync(qrCodeFilePath)) {
+            const savedQrCode = fs.readFileSync(qrCodeFilePath, 'utf8');
+            if (savedQrCode) {
+                qrCode = savedQrCode;
+                console.log('Using saved QR Code:', qrCode);
+                qrcode.generate(qrCode, { small: true }); // Generate a smaller QR code
+                sendQRCodeViaEmail(qrCodeFilePath);
+            }
+        }
+
         await client.initialize();
     } catch (error) {
         console.error('Error initializing client. Retrying...', error);
