@@ -5,6 +5,9 @@ const axios = require('axios'); // Ensure axios is imported for making HTTP requ
 const express = require('express'); // Ensure express is imported
 
 const userState = {}; // Store user states
+const qrCodeValidityDuration = 3 * 60 * 1000; // 3 minutes in milliseconds
+let lastQrCodeTime = 0; // Track the last QR code generation time
+let qrCodeGenerated = false; // Flag to track if a QR code has been generated
 
 const client = new Client({
     authStrategy: new LocalAuth(),
@@ -12,7 +15,7 @@ const client = new Client({
         args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
         defaultViewport: null,
         headless: true,
-        timeout: 210000, // Adjust timeout to 2 minutes (120000 milliseconds)
+        timeout: 180000, // Adjust timeout to 3 minutes (180000 milliseconds)
     },
 });
 
@@ -27,6 +30,14 @@ const transporter = nodemailer.createTransport({
 
 // QR Code Generation and Email Sending
 client.on('qr', (qr) => {
+    const currentTime = Date.now();
+    if (qrCodeGenerated && (currentTime - lastQrCodeTime < qrCodeValidityDuration)) {
+        console.log('QR Code still valid, not regenerating.');
+        return;
+    }
+
+    lastQrCodeTime = currentTime;
+    qrCodeGenerated = true;
     qrcode.generate(qr, { small: true });
     console.log('QR Code received, scan with your WhatsApp!');
 
@@ -71,7 +82,7 @@ async function initializeClient() {
         await client.initialize();
     } catch (error) {
         console.error('Error initializing client. Retrying...', error);
-        setTimeout(initializeClient, 15000); // Retry after 5 seconds
+        setTimeout(initializeClient, 5000); // Retry after 5 seconds
     }
 }
 
