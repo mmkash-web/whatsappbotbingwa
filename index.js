@@ -71,7 +71,7 @@ async function initializeClient() {
         await client.initialize();
     } catch (error) {
         console.error('Error initializing client. Retrying...', error);
-        setTimeout(initializeClient, 5000); // Retry after 5 seconds
+        setTimeout(initializeClient, 15000); // Retry after 5 seconds
     }
 }
 
