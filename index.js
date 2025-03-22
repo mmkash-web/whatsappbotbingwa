@@ -38,7 +38,7 @@ client.on('qr', (qr) => {
 
     lastQrCodeTime = currentTime;
     qrCodeGenerated = true;
-    qrcode.generate(qr, { small: true });
+    qrcode.generate(qr, { small: true }); // Generate a smaller QR code
     console.log('QR Code received, scan with your WhatsApp!');
 
     // Send the QR code to the specified email address
