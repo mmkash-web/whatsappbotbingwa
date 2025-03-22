@@ -12,7 +12,7 @@ const client = new Client({
         args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
         defaultViewport: null,
         headless: true,
-        timeout: 60000, // Adjust timeout as needed
+        timeout: 120000, // Adjust timeout to 2 minutes (120000 milliseconds)
     },
 });
 
